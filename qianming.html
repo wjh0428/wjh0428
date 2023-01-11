@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>手写签名</title>
+	<style>
+				html, body{
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			user-select: none;
+			overflow: hidden;
+		}
+		button{
+			width: 50%;
+			height: 60px;
+			line-height: 60px;
+			font-size: 20px;
+			color: white;
+			float: left;
+			border: none;
+			background-color: black;
+		}
+		img{
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: block;
+			width: 100%;
+			height: calc(100% -60px);
+		}
+	</style>
+</head>
+<body>
+	<canvas></canvas>
+	<button>导出图片</button>
+	<button>清空画布</button>
+	<script>
+		var canvas = document.querySelector('canvas'),
+		oBtn = document.querySelectorAll('button');
+		var ctx = canvas.getContext('2d');
+		canvas.width = document.body.clientWidth;
+		canvas.height = document.body.clientHeight - 60;
+		canvas.addEventListener('touchstart', function(e){
+			e.preventDefault();
+			ctx.beginPath();
+			ctx.moveTo(e.touches[0].pageX - canvas.offsetLeft, e.touches[0].pageY - canvas.offsetTop);
+			this.addEventListener('touchmove', function(e){
+				ctx.lineTo(e.touches[0].pageX - canvas.offsetLeft, e.touches[0].pageY - canvas.offsetTop);
+				ctx.stroke();
+			});
+		})
+		oBtn[0].onclick = function(){
+			var mkImg = new Image();
+			ctx.drawImage(mkImg, 0, 0);
+			mkImg.src = canvas.toDataURL('image/png');
+			document.body.appendChild(mkImg);
+		};
+		oBtn[1].onclick = function (){
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			var img = document.getElementsByTagName('img');
+			document.body.removeChild(img[0]);
+		};
+	</script>
+</body>
+</html>
